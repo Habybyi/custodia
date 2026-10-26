@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { FiUserPlus, FiKey, FiUserX, FiUserCheck, FiCopy } from "react-icons/fi";
+import { FiUserPlus, FiKey, FiUserX, FiUserCheck } from "react-icons/fi";
 import { AppShell } from "../components/AppShell";
 import { Field } from "../components/Field";
 import { Modal } from "../components/Modal";
@@ -7,6 +7,7 @@ import { PagedList } from "../components/PagedList";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../api/client";
 import { ROLE_LABELS } from "../utils/labels";
+import { CopyButton } from "../components/CopyButton";
 import styles from "../styles/neumorphic.module.css";
 
 const EMPTY_FORM = { name: "", email: "", phone: "", role: "TECHNICIAN" };
@@ -76,9 +77,6 @@ export const TeamPage = () => {
     }
   };
 
-  const copyCredentials = () => {
-    navigator.clipboard?.writeText(`E-mail: ${credentials.email}\nDočasné heslo: ${credentials.password}`);
-  };
 
   const UserRow = ({ u }) => (
     <div className={`${styles.listCard} ${styles.fixedRow}`} style={u.isActive ? undefined : { opacity: 0.55 }}>
@@ -155,9 +153,7 @@ export const TeamPage = () => {
           </div>
           <p className={styles.muted}>Heslo sa zobrazí len teraz. Pri prvom prihlásení si ho technik zmení.</p>
           <div className={styles.buttonRow} style={{ justifyContent: "flex-end" }}>
-            <button type="button" className={styles.secondaryButton} onClick={copyCredentials}>
-              <FiCopy /> Kopírovať
-            </button>
+            <CopyButton text={credentials.password} />
             <button type="button" className={styles.primaryButtonInline} onClick={() => setCredentials(null)}>
               HOTOVO
             </button>

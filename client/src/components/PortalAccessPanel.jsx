@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { FiCopy, FiKey, FiGlobe, FiUserCheck, FiUserX } from "react-icons/fi";
+import { FiKey, FiGlobe, FiUserCheck, FiUserX } from "react-icons/fi";
 import { Section } from "./Section";
 import { Modal } from "./Modal";
 import { InfoItem } from "./InfoItem";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../api/client";
 import { formatDate } from "../utils/format";
+import { CopyButton } from "./CopyButton";
 import styles from "../styles/neumorphic.module.css";
 
 export const PortalAccessPanel = ({ customer }) => {
@@ -37,8 +38,6 @@ export const PortalAccessPanel = ({ customer }) => {
   };
 
   const portalUrl = `${window.location.origin}/login`;
-  const copyCredentials = () =>
-    navigator.clipboard?.writeText(`Zákaznícky portál Custodia: ${portalUrl}\nE-mail: ${credentials.email}\nDočasné heslo: ${credentials.password}`);
 
   const state = !account ? "bez prístupu" : !account.isActive ? "vypnutý" : account.mustChangePassword ? "čaká na prvé prihlásenie" : "aktívny";
 
@@ -85,9 +84,7 @@ export const PortalAccessPanel = ({ customer }) => {
           </div>
           <p className={styles.muted}>Heslo sa zobrazí len teraz. Pri prvom prihlásení si ho zákazník zmení.</p>
           <div className={styles.buttonRow} style={{ justifyContent: "flex-end" }}>
-            <button type="button" className={styles.secondaryButton} onClick={copyCredentials}>
-              <FiCopy /> Kopírovať
-            </button>
+            <CopyButton text={credentials.password} />
             <button type="button" className={styles.primaryButtonInline} onClick={() => setCredentials(null)}>
               HOTOVO
             </button>
