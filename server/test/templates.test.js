@@ -22,6 +22,8 @@ const payload = {
   stockQty: 2,
   minStock: 4,
   unit: "ks",
+  url: "https://custodia.sk/reset-password?token=abc",
+  minutes: 60,
 };
 
 test("každá šablóna má predmet, text aj HTML bez 'undefined'", () => {

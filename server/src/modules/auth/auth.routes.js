@@ -17,6 +17,24 @@ authRouter.post("/login", loginLimiter, async (req, res) => {
   res.json(await authService.login(req.body));
 });
 
+const resetLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Priveľa pokusov. Skús to o chvíľu." },
+});
+
+authRouter.post("/forgot-password", resetLimiter, async (req, res) => {
+  await authService.requestPasswordReset(req.body);
+  res.json({ ok: true });
+});
+
+authRouter.post("/reset-password", resetLimiter, async (req, res) => {
+  await authService.resetPassword(req.body);
+  res.json({ ok: true });
+});
+
 authRouter.get("/me", requireAuth, async (req, res) => {
   res.json({ user: req.user });
 });

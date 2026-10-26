@@ -245,6 +245,29 @@ Otvoriť: ${url}`,
       ),
     };
   },
+  PASSWORD_RESET: ({ name, url, minutes }) => ({
+    subject: "Obnova hesla do Custodia",
+    text: `Dobrý deň${name ? ` ${name}` : ""},
+
+niekto (dúfame, že vy) požiadal o obnovu hesla do Custodia.
+Nové heslo si nastavíte cez tento odkaz, platí ${minutes} minút a dá sa použiť iba raz:
+
+${url}
+
+Ak ste o obnovu nežiadali, e-mail ignorujte. Vaše heslo sa nezmenilo.
+
+Tím Custodia`,
+    html: layout(
+      "Obnova hesla",
+      p(`Dobrý deň${name ? ` ${escape(name)}` : ""},`) +
+        p("niekto (dúfame, že vy) požiadal o obnovu hesla do Custodia.") +
+        p(
+          `<a href="${escape(url)}" style="display:inline-block;background:${ACCENT};color:#fff;text-decoration:none;padding:12px 20px;border-radius:10px;font-weight:bold">Nastaviť nové heslo</a>`
+        ) +
+        p(`Odkaz platí ${Number(minutes)} minút a dá sa použiť iba raz.`) +
+        p("Ak ste o obnovu nežiadali, e-mail ignorujte. Vaše heslo sa nezmenilo.")
+    ),
+  }),
 };
 
 export function renderTemplate(name, payload) {

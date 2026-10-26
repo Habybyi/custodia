@@ -35,6 +35,7 @@ model User {
   photos           Photo[]
   auditLogs        AuditLog[]
   notifications    Notification[]
+  passwordResets   PasswordReset[]
 }
 
 enum CustomerStatus {
@@ -445,4 +446,16 @@ model WebEvent {
   createdAt DateTime @default(now())
 
   @@index([createdAt, type])
+}
+
+model PasswordReset {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
 }
