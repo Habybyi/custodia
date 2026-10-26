@@ -19,7 +19,7 @@ export const passwordSchema = z
   .regex(/[0-9]/, "Heslo musí obsahovať číslo.");
 
 const changePasswordSchema = z.object({
-  currentPassword: z.string().min(1, "Zadaj aktuálne heslo."),
+  currentPassword: z.string().optional(),
   newPassword: passwordSchema,
 });
 
@@ -58,10 +58,15 @@ export async function changePassword(userId, body) {
   const { currentPassword, newPassword } = parse(changePasswordSchema, body);
   const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
 
-  if (!(await verifyPassword(currentPassword, user.passwordHash))) {
-    throw badRequest("Aktuálne heslo nesedí.", { fields: { currentPassword: "Aktuálne heslo nesedí." } });
+  if (!user.mustChangePassword) {
+    if (!currentPassword) {
+      throw badRequest("Zadaj aktuálne heslo.", { fields: { currentPassword: "Zadaj aktuálne heslo." } });
+    }
+    if (!(await verifyPassword(currentPassword, user.passwordHash))) {
+      throw badRequest("Aktuálne heslo nesedí.", { fields: { currentPassword: "Aktuálne heslo nesedí." } });
+    }
   }
-  if (currentPassword === newPassword) {
+  if (await verifyPassword(newPassword, user.passwordHash)) {
     throw badRequest("Nové heslo musí byť iné ako to súčasné.", {
       fields: { newPassword: "Nové heslo musí byť iné ako to súčasné." },
     });

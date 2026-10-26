@@ -4,6 +4,7 @@ import { FiLock } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import { BrandHeader } from "../components/BrandHeader";
 import { Field } from "../components/Field";
+import { PasswordInput } from "../components/PasswordInput";
 import styles from "../styles/neumorphic.module.css";
 
 export const ChangePasswordPage = () => {
@@ -48,37 +49,33 @@ export const ChangePasswordPage = () => {
               : "Zmena hesla"}
           </p>
 
-          <Field icon={FiLock} error={fieldErrors.currentPassword}>
-            <input
-              type="password"
-              placeholder="Aktuálne (dočasné) heslo"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              className={styles.input}
-              autoComplete="current-password"
-              required
-            />
-          </Field>
+          {!user?.mustChangePassword && (
+            <Field icon={FiLock} error={fieldErrors.currentPassword}>
+              <PasswordInput
+                placeholder="Aktuálne heslo"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                autoComplete="current-password"
+                required
+              />
+            </Field>
+          )}
 
           <Field icon={FiLock} error={fieldErrors.newPassword}>
-            <input
-              type="password"
+            <PasswordInput
               placeholder="Nové heslo (aspoň 8 znakov, písmeno aj číslo)"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className={styles.input}
               autoComplete="new-password"
               required
             />
           </Field>
 
           <Field icon={FiLock} error={fieldErrors.confirmPassword}>
-            <input
-              type="password"
+            <PasswordInput
               placeholder="Nové heslo znova"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className={styles.input}
               autoComplete="new-password"
               required
             />
