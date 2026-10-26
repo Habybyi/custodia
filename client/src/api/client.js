@@ -58,6 +58,8 @@ async function fetchBlob(path, token) {
 export const api = {
   login: (email, password) => request("/auth/login", { method: "POST", body: { email, password } }),
   me: (token) => request("/auth/me", { token }),
+  forgotPassword: (email) => request("/auth/forgot-password", { method: "POST", body: { email } }),
+  resetPasswordWithLink: (resetToken, newPassword) => request("/auth/reset-password", { method: "POST", body: { token: resetToken, newPassword } }),
   changePassword: (token, currentPassword, newPassword) =>
     request("/auth/change-password", { method: "POST", token, body: { currentPassword, newPassword } }),
 

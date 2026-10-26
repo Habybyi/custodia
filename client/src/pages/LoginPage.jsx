@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { FiMail, FiLock } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import { BrandHeader } from "../components/BrandHeader";
@@ -98,6 +98,9 @@ export const LoginPage = () => {
             </button>
           )}
         </form>
+        <Link to="/forgot-password" className={styles.linkButton} style={{ display: "block", textAlign: "center", marginTop: "1rem" }}>
+          Zabudli ste heslo?
+        </Link>
         <a href="/" className={styles.linkButton} style={{ display: "block", textAlign: "center", marginTop: "1rem" }}>
           Späť na web Custodia
         </a>

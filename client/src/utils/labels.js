@@ -114,6 +114,8 @@ export const AUDIT_ACTION_LABELS = {
   LOGIN_FAILED: "Neúspešné prihlásenie",
   PASSWORD_CHANGED: "Zmena hesla",
   PASSWORD_RESET: "Nové dočasné heslo",
+  PASSWORD_RESET_REQUESTED: "Žiadosť o obnovu hesla e-mailom",
+  PASSWORD_RESET_BY_EMAIL: "Heslo obnovené cez e-mail",
   USER_CREATED: "Nový člen tímu",
   USER_UPDATED: "Úprava člena tímu",
   CUSTOMER_CREATED: "Nový zákazník",
