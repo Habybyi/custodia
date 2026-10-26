@@ -2279,3 +2279,28 @@
     overflow: visible;
   }
 }
+
+.revealButton {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin: -0.4rem -0.4rem -0.4rem 0;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--neu-text-muted);
+  cursor: pointer;
+  font-size: 1.05rem;
+}
+
+.revealButton:hover {
+  color: var(--neu-accent-dark);
+}
+
+.revealButton:focus-visible {
+  outline: 2px solid var(--neu-accent);
+  outline-offset: 1px;
+}

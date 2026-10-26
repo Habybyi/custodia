@@ -4,6 +4,7 @@ import { FiMail, FiLock } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import { BrandHeader } from "../components/BrandHeader";
 import { Field } from "../components/Field";
+import { PasswordInput } from "../components/PasswordInput";
 import styles from "../styles/neumorphic.module.css";
 
 export const LoginPage = () => {
@@ -64,13 +65,11 @@ export const LoginPage = () => {
           {isPasswordStep && (
             <div className={styles.slideDown}>
               <Field icon={FiLock}>
-                <input
+                <PasswordInput
                   ref={passwordRef}
-                  type="password"
                   placeholder="Heslo"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className={styles.input}
                   autoComplete="current-password"
                   required
                 />
