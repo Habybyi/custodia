@@ -8,3 +8,11 @@ auditRouter.use(requireRole("OWNER"));
 auditRouter.get("/", async (req, res) => {
   res.json(await auditService.listAudit(req.query));
 });
+
+auditRouter.get("/users", async (req, res) => {
+  res.json(await auditService.listAuditUsers());
+});
+
+auditRouter.get("/ip/:ip", async (req, res) => {
+  res.json(await auditService.ipSummary(String(req.params.ip).slice(0, 64)));
+});

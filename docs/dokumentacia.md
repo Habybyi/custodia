@@ -179,7 +179,11 @@ Milan vidí:
 
 ### 4.12 Logy
 
-Majiteľ vidí, **kto čo kedy v systéme spravil**, vrátane **neúspešných pokusov o prihlásenie**. Server navyše vypisuje každú požiadavku do terminálu (bez obsahu, aby sa do logu nedostali heslá).
+Majiteľ vidí, **kto čo kedy v systéme spravil**, vrátane **neúspešných pokusov o prihlásenie**. Pri každom zázname je **IP adresa** a **zariadenie** (napríklad „Chrome na iPhone“).
+
+Filtre: hľadanie podľa mena, e-mailu alebo IP, výber používateľa, typ udalosti (skupiny Bezpečnosť, Prihlásenia, Neúspešné prihlásenia, Zákazníci alebo konkrétna akcia), IP adresa a obdobie od do. Klik na IP zobrazí všetko z tejto adresy a súhrn: kedy sa objavila prvýkrát a naposledy, ktoré účty z nej boli prihlásené a koľkokrát z nej niekto zadal zlé heslo.
+
+Server navyše vypisuje každú požiadavku do terminálu (bez obsahu, aby sa do logu nedostali heslá).
 
 ## 5. Bezpečnosť a GDPR
 
@@ -187,6 +191,7 @@ Majiteľ vidí, **kto čo kedy v systéme spravil**, vrátane **neúspešných p
 |---|---|
 | Heslá | bcrypt (12 kôl), dočasné heslo pri novom účte, povinná zmena pri prvom prihlásení |
 | Prihlásenie | dva kroky (e-mail, potom heslo), limit pokusov, rovnaká hláška pri zlom e-maile aj hesle |
+| Logy | každá akcia s IP adresou a zariadením, filtre podľa používateľa, IP, typu a dátumu |
 | Prístup | každá požiadavka overuje rolu na serveri, deaktivovaný účet prestane platiť okamžite |
 | Kľúče zariadení | iba hash v databáze, nikdy sa nevracajú z API ani v exporte |
 | Verejné formuláre | limit odoslaní, skryté pole proti robotom, povinný súhlas, verejnosti sa vracia iba číslo požiadavky |

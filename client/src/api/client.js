@@ -65,6 +65,8 @@ export const api = {
 
   listUsers: (token, query) => request("/users", { token, query }),
   listAudit: (token, query) => request("/audit", { token, query }),
+  listAuditUsers: (token) => request("/audit/users", { token }),
+  getIpSummary: (token, ip) => request(`/audit/ip/${encodeURIComponent(ip)}`, { token }),
   getWebStats: (token, days) => request("/stats/web", { token, query: { days } }),
   createUser: (token, data) => request("/users", { method: "POST", token, body: data }),
   updateUser: (token, id, data) => request(`/users/${id}`, { method: "PATCH", token, body: data }),

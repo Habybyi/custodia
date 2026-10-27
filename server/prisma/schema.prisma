@@ -433,10 +433,14 @@ model AuditLog {
   entityType String
   entityId   String?
   details    Json?
+  ip         String?
+  userAgent  String?
   createdAt  DateTime @default(now())
 
   @@index([entityType, entityId])
   @@index([createdAt])
+  @@index([userId])
+  @@index([ip])
 }
 
 model WebEvent {
