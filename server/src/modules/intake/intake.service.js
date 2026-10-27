@@ -23,14 +23,17 @@ const splitName = (fullName) => {
 
 async function findOrCreateCustomer({ name, email, phone, street, city, postalCode, source, marketingConsent = false }) {
   const phoneNormalized = normalizePhone(phone);
-  const or = [
-    ...(email ? [{ email: { equals: email, mode: "insensitive" } }] : []),
-    ...(phoneNormalized ? [{ phoneNormalized }] : []),
-  ];
-
-  let customer = or.length
-    ? await prisma.customer.findFirst({ where: { deletedAt: null, OR: or }, orderBy: { createdAt: "asc" } })
+  const byEmail = email
+    ? await prisma.customer.findFirst({
+        where: { deletedAt: null, email: { equals: email, mode: "insensitive" } },
+        orderBy: { createdAt: "asc" },
+      })
     : null;
+  let customer =
+    byEmail ||
+    (phoneNormalized
+      ? await prisma.customer.findFirst({ where: { deletedAt: null, phoneNormalized }, orderBy: { createdAt: "asc" } })
+      : null);
 
   if (!customer) {
     const { firstName, lastName } = splitName(name || email || "Neznámy");
