@@ -92,7 +92,7 @@ export const CustomerDetailPage = () => {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm(`Naozaj odstrániť zákazníka ${fullName(customer)}? História zostane uložená.`)) return;
+    if (!window.confirm(`Naozaj natrvalo zmazať zákazníka ${fullName(customer)}?\n\nZmažú sa aj jeho záhrady, požiadavky, termíny, história výjazdov, fotky, IoT zariadenia a prístup do portálu. Toto sa nedá vrátiť.`)) return;
     try {
       await api.deleteCustomer(token, id);
       navigate("/customers");

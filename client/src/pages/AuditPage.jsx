@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FiRefreshCw, FiSearch, FiX } from "react-icons/fi";
+import { FiFilter, FiRefreshCw, FiSearch, FiX } from "react-icons/fi";
 import { AppShell } from "../components/AppShell";
 import { PagedList } from "../components/PagedList";
 import { useAuth } from "../context/AuthContext";
@@ -68,6 +68,7 @@ export const AuditPage = () => {
   const [ipInfo, setIpInfo] = useState(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
   const appliedRef = useRef(applied);
 
   const load = async (f = appliedRef.current) => {
@@ -85,7 +86,10 @@ export const AuditPage = () => {
   };
 
   useEffect(() => {
-    api.listAuditUsers(token).then(setUsers).catch(() => setUsers([]));
+    api
+      .listAuditUsers(token)
+      .then(setUsers)
+      .catch(() => setUsers([]));
   }, [token]);
 
   useEffect(() => {
@@ -106,37 +110,44 @@ export const AuditPage = () => {
       setIpInfo(null);
       return;
     }
-    api.getIpSummary(token, ip).then(setIpInfo).catch(() => setIpInfo(null));
+    api
+      .getIpSummary(token, ip)
+      .then(setIpInfo)
+      .catch(() => setIpInfo(null));
   }, [token, applied.ip]);
 
   const set = (key) => (e) => setFilters((f) => ({ ...f, [key]: e.target.value }));
-  const filterByIp = (ip) => setFilters((f) => ({ ...f, ip }));
-  const isFiltered = Object.values(filters).some(Boolean);
+  const filterByIp = (ip) => {
+    setFilters((f) => ({ ...f, ip }));
+    setShowFilters(true);
+  };
+  const activeCount = Object.values(filters).filter(Boolean).length;
+  const isFiltered = activeCount > 0;
 
   const EntryRow = ({ entry }) => {
     const details = describeDetails(entry.details);
     const who = entry.user?.name || entry.details?.email || "Systém";
     const device = describeDevice(entry.userAgent);
     return (
-      <div className={`${styles.listCard} ${styles.fixedRow}`}>
+      <div className={`${styles.listCard} ${styles.fixedRow} ${styles.logRow}`}>
         <span className={styles.listCardMain}>
-          <span className={styles.listCardTitle}>{AUDIT_ACTION_LABELS[entry.action] || entry.action}</span>
-          <span className={styles.listCardMeta}>
-            {formatDateTime(entry.createdAt)} · {who} · {AUDIT_ENTITY_LABELS[entry.entityType] || entry.entityType}
-            {details && ` · ${details}`}
+          <span className={styles.listCardTitle}>
+            {AUDIT_ACTION_LABELS[entry.action] || entry.action} · {who}
           </span>
-          <span className={styles.listCardMeta}>
+          <span className={styles.listCardMeta} title={details}>
             {entry.ip ? (
               <button type="button" className={styles.linkButton} onClick={() => filterByIp(entry.ip)} title="Zobraziť všetko z tejto IP">
-                IP {entry.ip}
+                {entry.ip}
               </button>
             ) : (
               "IP neznáma"
             )}
-            {device && ` · ${device}`}
+            {device && ` · ${device}`} · {AUDIT_ENTITY_LABELS[entry.entityType] || entry.entityType}
+            {details && ` · ${details}`}
           </span>
         </span>
         {WARNING_ACTIONS.includes(entry.action) && <span className={styles.badgeBrand}>Pozor</span>}
+        <span className={styles.logTime}>{formatDateTime(entry.createdAt)}</span>
       </div>
     );
   };
@@ -153,6 +164,10 @@ export const AuditPage = () => {
           </p>
         </div>
         <div className={styles.buttonRow}>
+          <button type="button" className={styles.secondaryButton} onClick={() => setShowFilters((v) => !v)} aria-expanded={showFilters}>
+            <FiFilter /> {showFilters ? "SKRYŤ FILTRE" : "FILTRE"}
+            {activeCount > 0 && <span className={styles.filterCount}>{activeCount}</span>}
+          </button>
           {isFiltered && (
             <button type="button" className={styles.secondaryButton} onClick={() => setFilters(EMPTY_FILTERS)}>
               <FiX /> ZRUŠIŤ FILTRE
@@ -164,50 +179,52 @@ export const AuditPage = () => {
         </div>
       </div>
 
-      <div className={styles.toolbar}>
-        <div className={`${styles.inputWrapper} ${styles.toolbarSearch}`}>
-          <FiSearch />
-          <input className={styles.input} placeholder="Hľadať meno, e-mail alebo IP" value={filters.q} onChange={set("q")} />
-        </div>
-        <div className={styles.inputWrapper} style={{ flex: "1 1 180px" }}>
-          <select className={styles.select} value={filters.userId} onChange={set("userId")} aria-label="Používateľ">
-            <option value="">Každý používateľ</option>
-            {users.map((u) => (
-              <option key={u.id} value={u.id}>
-                {u.name} ({ROLE_LABELS[u.role] || u.role})
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className={styles.inputWrapper} style={{ flex: "1 1 220px" }}>
-          <select className={styles.select} value={filters.type} onChange={set("type")} aria-label="Typ udalosti">
-            <option value="">Každá udalosť</option>
-            <optgroup label="Skupiny">
-              {GROUPS.map(([value, label]) => (
-                <option key={value} value={`group:${value}`}>
-                  {label}
+      {showFilters && (
+        <div className={styles.toolbar}>
+          <div className={`${styles.inputWrapper} ${styles.toolbarSearch}`}>
+            <FiSearch />
+            <input className={styles.input} placeholder="Hľadať meno, e-mail alebo IP" value={filters.q} onChange={set("q")} />
+          </div>
+          <div className={styles.inputWrapper} style={{ flex: "1 1 180px" }}>
+            <select className={styles.select} value={filters.userId} onChange={set("userId")} aria-label="Používateľ">
+              <option value="">Každý používateľ</option>
+              {users.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.name} ({ROLE_LABELS[u.role] || u.role})
                 </option>
               ))}
-            </optgroup>
-            <optgroup label="Konkrétna udalosť">
-              {Object.entries(AUDIT_ACTION_LABELS).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </optgroup>
-          </select>
+            </select>
+          </div>
+          <div className={styles.inputWrapper} style={{ flex: "1 1 220px" }}>
+            <select className={styles.select} value={filters.type} onChange={set("type")} aria-label="Typ udalosti">
+              <option value="">Každá udalosť</option>
+              <optgroup label="Skupiny">
+                {GROUPS.map(([value, label]) => (
+                  <option key={value} value={`group:${value}`}>
+                    {label}
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup label="Konkrétna udalosť">
+                {Object.entries(AUDIT_ACTION_LABELS).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </optgroup>
+            </select>
+          </div>
+          <div className={styles.inputWrapper} style={{ flex: "1 1 150px" }}>
+            <input className={styles.input} placeholder="IP adresa" value={filters.ip} onChange={set("ip")} aria-label="IP adresa" />
+          </div>
+          <div className={styles.inputWrapper} style={{ flex: "1 1 140px" }} title="Od dátumu">
+            <input className={styles.input} type="date" value={filters.from} onChange={set("from")} aria-label="Od dátumu" />
+          </div>
+          <div className={styles.inputWrapper} style={{ flex: "1 1 140px" }} title="Do dátumu">
+            <input className={styles.input} type="date" value={filters.to} onChange={set("to")} aria-label="Do dátumu" />
+          </div>
         </div>
-        <div className={styles.inputWrapper} style={{ flex: "1 1 150px" }}>
-          <input className={styles.input} placeholder="IP adresa" value={filters.ip} onChange={set("ip")} aria-label="IP adresa" />
-        </div>
-        <div className={styles.inputWrapper} style={{ flex: "1 1 140px" }} title="Od dátumu">
-          <input className={styles.input} type="date" value={filters.from} onChange={set("from")} aria-label="Od dátumu" />
-        </div>
-        <div className={styles.inputWrapper} style={{ flex: "1 1 140px" }} title="Do dátumu">
-          <input className={styles.input} type="date" value={filters.to} onChange={set("to")} aria-label="Do dátumu" />
-        </div>
-      </div>
+      )}
 
       {ipInfo && ipInfo.lastSeen && (
         <div className={styles.listCard} style={{ marginBottom: "1rem" }}>
@@ -222,11 +239,15 @@ export const AuditPage = () => {
         </div>
       )}
 
-      {error && <div className={styles.errorMessage} style={{ marginBottom: "1rem" }}>{error}</div>}
+      {error && (
+        <div className={styles.errorMessage} style={{ marginBottom: "1rem" }}>
+          {error}
+        </div>
+      )}
 
       <PagedList
         items={entries}
-        rowHeight={96}
+        rowHeight={58}
         renderItem={(entry) => <EntryRow entry={entry} />}
         empty={<p className={styles.emptyState}>{isFiltered ? "Filtru nezodpovedá žiadny záznam." : "Zatiaľ žiadne záznamy."}</p>}
       />

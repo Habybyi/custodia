@@ -1,5 +1,7 @@
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
 import { prisma } from "../../lib/prisma.js";
+import { storage } from "../../lib/storage.js";
 import { badRequest, notFound } from "../../lib/httpError.js";
 import { parse } from "../../lib/validate.js";
 import { getPagination, paginated } from "../../lib/pagination.js";
@@ -155,8 +157,48 @@ export async function updateCustomer(actorId, id, body) {
 }
 
 export async function deleteCustomer(actorId, id) {
-  const existing = await prisma.customer.findFirst({ where: { id, deletedAt: null } });
+  const existing = await prisma.customer.findUnique({ where: { id }, include: { user: { select: { id: true } } } });
   if (!existing) throw notFound("Zákazník sa nenašiel.");
-  await prisma.customer.update({ where: { id }, data: { deletedAt: new Date(), status: "INACTIVE" } });
-  await logAudit({ userId: actorId, action: "CUSTOMER_DELETED", entityType: "Customer", entityId: id });
+
+  const gardenIds = (await prisma.garden.findMany({ where: { customerId: id }, select: { id: true } })).map((g) => g.id);
+  const requestIds = (await prisma.serviceRequest.findMany({ where: { customerId: id }, select: { id: true } })).map((r) => r.id);
+  const workLogIds = (
+    await prisma.workLog.findMany({
+      where: { OR: [{ gardenId: { in: gardenIds } }, { serviceRequestId: { in: requestIds } }] },
+      select: { id: true },
+    })
+  ).map((w) => w.id);
+  const photoWhere = { OR: [{ gardenId: { in: gardenIds } }, { serviceRequestId: { in: requestIds } }, { workLogId: { in: workLogIds } }] };
+  const photoKeys = (await prisma.photo.findMany({ where: photoWhere, select: { storageKey: true } })).map((p) => p.storageKey);
+
+  await prisma.$transaction(async (tx) => {
+    await tx.photo.deleteMany({ where: photoWhere });
+    await tx.workLog.deleteMany({ where: { id: { in: workLogIds } } });
+    await tx.appointment.deleteMany({ where: { OR: [{ gardenId: { in: gardenIds } }, { serviceRequestId: { in: requestIds } }] } });
+    await tx.notification.deleteMany({
+      where: { OR: [{ customerId: id }, ...requestIds.map((requestId) => ({ payload: { path: ["requestId"], equals: requestId } }))] },
+    });
+    await tx.serviceRequest.deleteMany({ where: { id: { in: requestIds } } });
+    await tx.garden.deleteMany({ where: { id: { in: gardenIds } } });
+    if (existing.user) {
+      const userId = existing.user.id;
+      await tx.auditLog.updateMany({ where: { userId }, data: { userId: null } });
+      await tx.serviceRequest.updateMany({ where: { createdById: userId }, data: { createdById: null } });
+      await tx.requestStatusChange.updateMany({ where: { changedById: userId }, data: { changedById: null } });
+      await tx.photo.updateMany({ where: { uploadedById: userId }, data: { uploadedById: null } });
+      await tx.notification.deleteMany({ where: { userId } });
+      await tx.user.delete({ where: { id: userId } });
+    }
+    await tx.auditLog.updateMany({ where: { entityType: "Customer", entityId: id }, data: { details: Prisma.DbNull } });
+    await tx.customer.delete({ where: { id } });
+  });
+
+  for (const key of photoKeys) await storage.remove(key).catch(() => {});
+  await logAudit({
+    userId: actorId,
+    action: "CUSTOMER_DELETED",
+    entityType: "Customer",
+    entityId: id,
+    details: { záhrady: gardenIds.length, požiadavky: requestIds.length, výjazdy: workLogIds.length, fotky: photoKeys.length },
+  });
 }
