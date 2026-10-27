@@ -1,0 +1,22 @@
+{
+  "name": "Custodia",
+  "short_name": "Custodia",
+  "description": "Servis závlah a starostlivosť o záhradu: požiadavky, termíny, výjazdy a portál zákazníka.",
+  "lang": "sk",
+  "id": "/dashboard",
+  "start_url": "/dashboard",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#e7ede5",
+  "theme_color": "#0a2e0f",
+  "icons": [
+    { "src": "/app-icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/app-icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/app-icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Nová požiadavka", "url": "/requests/new", "icons": [{ "src": "/app-icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Kalendár", "url": "/calendar", "icons": [{ "src": "/app-icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
