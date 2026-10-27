@@ -100,10 +100,31 @@ $("#map-load").onclick = () => {
 
 $$("[data-t]").forEach((e) => e.addEventListener("click", () => track("click_" + e.dataset.t)));
 
-function showStats() {
-  const s = st.get("stats") || { events: {}, sources: {} },
-    e = s.events,
-    n = (k) => e[k] || 0;
+function localStats() {
+  const s = st.get("stats") || { events: {}, sources: {} };
+  return {
+    counts: s.events,
+    sources: Object.entries(s.sources)
+      .sort((a, b) => b[1] - a[1])
+      .map(([source, count]) => ({ source, count })),
+  };
+}
+
+async function loadStats() {
+  if (CFG.crm) {
+    try {
+      const r = await fetch(CFG.crm + "/events/summary");
+      if (r.ok) return { ...(await r.json()), live: true };
+    } catch (e) {}
+  }
+  return { ...localStats(), live: false };
+}
+
+async function showStats() {
+  $("#stats-body").innerHTML = '<p class="who">Načítavam…</p>';
+  $("#stats").classList.remove("hide");
+  const data = await loadStats();
+  const n = (k) => data.counts[k] || 0;
   const pv = n("page_view"),
     pct = (a, b) => (b ? Math.round((a / b) * 100) + " %" : "–");
   const funnel = [
@@ -113,7 +134,6 @@ function showStats() {
     ["Odoslali dopyt (lead)", n("lead_submit"), pct(n("lead_submit"), n("calc_complete"))],
   ];
   const max = Math.max(1, pv);
-  const sources = Object.entries(s.sources).sort((a, b) => b[1] - a[1]);
   $("#stats-body").innerHTML = `
     <h3>Lievik kalkulačky</h3>
     ${funnel
@@ -128,13 +148,15 @@ function showStats() {
     </div>
     <h3>Odkiaľ prichádzajú návštevníci</h3>
     ${
-      sources.length
-        ? `<table class="tb">${sources.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${v}</td></tr>`).join("")}</table>`
+      data.sources.length
+        ? `<table class="tb">${data.sources.map((s) => `<tr><td>${esc(s.source)}</td><td>${s.count}</td></tr>`).join("")}</table>`
         : '<p class="who">Zatiaľ žiadne dáta.</p>'
     }
-    <p class="who">Ukážka z tohto prehliadača (len so súhlasom s analytikou). Na ostrom webe sa rovnaké
-    udalosti posielajú do Google Analytics 4, kde sú súhrnné dáta všetkých návštevníkov.</p>`;
-  $("#stats").classList.remove("hide");
+    <p class="who">${
+      data.live
+        ? "Súhrn všetkých návštevníkov za posledných 30 dní. Meriame bez cookies a bez osobných údajov, ukladá sa iba typ udalosti a zdroj návštevy."
+        : "Server je nedostupný, zobrazujú sa iba údaje z tohto prehliadača."
+    }</p>`;
 }
 $("#stats-close").onclick = () => $("#stats").classList.add("hide");
 $("#stats-link").onclick = (e) => {

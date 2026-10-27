@@ -18,6 +18,11 @@ publicEventsRouter.post("/", limiter, async (req, res) => {
   res.status(204).end();
 });
 
+publicEventsRouter.get("/summary", async (req, res) => {
+  res.set("Cache-Control", "public, max-age=60");
+  res.json(await webStatsService.getPublicSummary());
+});
+
 export const statsRouter = Router();
 statsRouter.use(requireRole("OWNER"));
 

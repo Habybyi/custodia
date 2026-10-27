@@ -58,3 +58,13 @@ export async function getWebStats(query) {
     webCustomers: { leads: leadCounts.LEAD || 0, active: leadCounts.ACTIVE || 0 },
   };
 }
+
+let summaryCache = { at: 0, data: null };
+
+export async function getPublicSummary() {
+  if (summaryCache.data && Date.now() - summaryCache.at < 60_000) return summaryCache.data;
+  const stats = await getWebStats({ days: 30 });
+  const data = { days: stats.days, counts: stats.counts, sources: stats.sources.slice(0, 5) };
+  summaryCache = { at: Date.now(), data };
+  return data;
+}
