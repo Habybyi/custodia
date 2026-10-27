@@ -25,6 +25,7 @@ export const config = {
     pass: process.env.SMTP_PASS || "",
   },
   mailFrom: process.env.MAIL_FROM || "Custodia <servis@custodia.sk>",
+  brevoApiKey: process.env.BREVO_API_KEY || "",
   inboundEmailSecret: process.env.INBOUND_EMAIL_SECRET || "",
   gemini: {
     apiKey: process.env.GEMINI_API_KEY || "",
