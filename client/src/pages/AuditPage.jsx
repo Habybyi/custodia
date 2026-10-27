@@ -22,6 +22,7 @@ const EMPTY_FILTERS = { q: "", userId: "", type: "", ip: "", from: "", to: "" };
 const describeDetails = (details) => {
   if (!details || typeof details !== "object") return "";
   return Object.entries(details)
+    .filter(([, value]) => value !== null && value !== undefined && value !== "")
     .map(([key, value]) => `${key}: ${typeof value === "object" ? JSON.stringify(value) : value}`)
     .join(", ");
 };
