@@ -133,12 +133,12 @@
 }
 .b1 {
   background:
-    url("../assets/img/pred.jpg") center / cover no-repeat,
+    url("../assets/img/pred.webp") center / cover no-repeat,
     repeating-linear-gradient(35deg, #a38a55 0 14px, #8c7745 14px 28px, #7d9a4b 28px 34px);
 }
 .b2 {
   background:
-    url("../assets/img/po.jpg") center / cover no-repeat,
+    url("../assets/img/po.webp") center / cover no-repeat,
     linear-gradient(#7fd0f5 0 30%, transparent 30%),
     repeating-linear-gradient(90deg, #2f9e44 0 22px, #37b24d 22px 44px);
   clip-path: inset(0 0 0 var(--p, 50%));

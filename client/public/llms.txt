@@ -1,0 +1,22 @@
+# Custodia
+
+> Custodia je firma z Popradu, ktorá navrhuje a inštaluje smart závlahu, robí jarné spustenie a jesenné zazimovanie závlahy a stará sa o trávniky. Pôsobí v Poprade, Svite, Kežmarku, Vysokých Tatrách, Spišskej Belej, Starej Ľubovni a okolí.
+
+## Hlavné stránky
+
+- [Domov](https://custodia-pearl.vercel.app/): služby, kalkulačka orientačnej ceny závlahy, ukážka pred a po, rezervácia termínu, servisný formulár, časté otázky a kontakt
+- [Ochrana osobných údajov](https://custodia-pearl.vercel.app/ochrana-udajov.html): ako firma spracúva osobné údaje a cookies
+
+## Služby
+
+- Smart závlaha na mieru ovládaná z mobilu, so senzormi vlhkosti a predpoveďou počasia
+- Jarné spustenie a jesenné zazimovanie závlahy
+- Pravidelná starostlivosť o trávnik (kosenie, vertikutácia, hnojenie)
+- Servis a opravy porúch závlahy
+
+## Kontakt
+
+- E-mail: milan.kovac@custodia.sk
+- Adresa: Ul. 29. augusta 4812, 058 01 Poprad
+- Instagram: https://www.instagram.com/custodia_sk/
+- Facebook: https://www.facebook.com/profile.php?id=61595398696569

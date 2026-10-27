@@ -7,4 +7,4 @@ Disallow: /app.html
 Disallow: /dashboard
 Disallow: /portal
 
-Sitemap: https://custodia.sk/sitemap.xml
+Sitemap: https://custodia-pearl.vercel.app/sitemap.xml

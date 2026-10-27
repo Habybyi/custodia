@@ -24,7 +24,7 @@ svg {
   max-width: 100%;
 }
 a {
-  color: var(--brand);
+  color: var(--brand2);
 }
 .w {
   max-width: 1100px;
@@ -48,7 +48,7 @@ h2 {
   font-size: clamp(1.6rem, 4.5vw, 2.4rem);
 }
 .eyebrow {
-  color: var(--brand);
+  color: var(--brand2);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
