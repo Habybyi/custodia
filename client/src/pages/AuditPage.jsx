@@ -147,7 +147,9 @@ export const AuditPage = () => {
         <div>
           <h1 className={styles.pageTitle}>Logy</h1>
           <p className={styles.muted} style={{ margin: "0.2rem 0 0" }}>
-            {total > entries.length ? `Zobrazených posledných ${entries.length} z ${total} záznamov.` : `${total} záznamov.`}
+            {total > entries.length
+              ? `Zobrazených posledných ${entries.length} z ${total} záznamov.`
+              : `${total} ${total === 1 ? "záznam" : total >= 2 && total <= 4 ? "záznamy" : "záznamov"}.`}
           </p>
         </div>
         <div className={styles.buttonRow}>
