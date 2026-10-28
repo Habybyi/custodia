@@ -198,7 +198,7 @@ Server navyše vypisuje každú požiadavku do terminálu (bez obsahu, aby sa do
 | AI asistent | kľúč iba na serveri, limit otázok, do AI ide iba posledných 12 správ |
 | HTTP | bezpečnostné hlavičky (Helmet), CRM je zakázané pre vyhľadávače |
 | GDPR prístup a prenosnosť | export všetkých údajov do JSON (majiteľ v karte zákazníka, zákazník v portáli) |
-| GDPR vymazanie | anonymizácia: osobné údaje zmiznú, servisná história ostane bez nich kvôli záruke a účtovníctvu |
+| GDPR vymazanie | zmazanie zákazníka natrvalo odstráni jeho osobné údaje, záhrady, požiadavky, históriu, fotky aj prístup do portálu |
 | GDPR súhlasy | servisné pripomienky a marketing zvlášť, zákazník ich mení sám v portáli |
 | Audit | kto čo kedy zmenil, nič sa nemaže natvrdo |
 

@@ -122,7 +122,6 @@ export const AUDIT_ACTION_LABELS = {
   CUSTOMER_UPDATED: "Úprava zákazníka",
   CUSTOMER_DELETED: "Zmazaný zákazník",
   CUSTOMER_EXPORTED: "Export údajov zákazníka (GDPR)",
-  CUSTOMER_ANONYMIZED: "Anonymizácia zákazníka (GDPR)",
   GARDEN_CREATED: "Nová záhrada",
   GARDEN_UPDATED: "Úprava záhrady",
   GARDEN_DELETED: "Zmazaná záhrada",

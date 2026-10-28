@@ -13,7 +13,6 @@ import {
   FiInbox,
   FiChevronRight,
   FiDownload,
-  FiShield,
   FiGlobe,
 } from "react-icons/fi";
 import { AppShell } from "../components/AppShell";
@@ -68,24 +67,6 @@ export const CustomerDetailPage = () => {
       link.download = `zakaznik-${customer.lastName || id}.json`;
       link.click();
       URL.revokeObjectURL(url);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const handleAnonymize = async () => {
-    const expected = customer.lastName;
-    const typed = window.prompt(
-      `Anonymizácia je nevratná. Zmaže meno, kontakty, adresu, poznámky a fotky. História zásahov ostane bez osobných údajov.\n\nNa potvrdenie napíš priezvisko: ${expected}`
-    );
-    if (typed === null) return;
-    if (typed.trim().toLowerCase() !== expected.toLowerCase()) {
-      setError("Priezvisko nesedí, anonymizácia sa nevykonala.");
-      return;
-    }
-    try {
-      await api.anonymizeCustomer(token, id);
-      navigate("/customers");
     } catch (err) {
       setError(err.message);
     }
@@ -162,14 +143,9 @@ export const CustomerDetailPage = () => {
             icon={FiUser}
             actions={
               user.role === "OWNER" && (
-                <>
-                  <button type="button" className={styles.secondaryButton} onClick={handleExport} title="Export všetkých údajov (GDPR)">
-                    <FiDownload /> Export údajov
-                  </button>
-                  <button type="button" className={styles.dangerButton} onClick={handleAnonymize} title="Právo na vymazanie (GDPR)">
-                    <FiShield /> Anonymizovať
-                  </button>
-                </>
+                <button type="button" className={styles.secondaryButton} onClick={handleExport} title="Export všetkých údajov (GDPR)">
+                  <FiDownload /> Export údajov
+                </button>
               )
             }
           >

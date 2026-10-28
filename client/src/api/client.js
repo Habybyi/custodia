@@ -89,7 +89,6 @@ export const api = {
   portalHistory: (token, query) => request("/portal/history", { token, query }),
   portalPreferences: (token, data) => request("/portal/preferences", { method: "PATCH", token, body: data }),
   portalExport: (token) => fetchBlob("/portal/export", token),
-  anonymizeCustomer: (token, id) => request(`/customers/${id}/anonymize`, { method: "POST", token }),
 
   createGarden: (token, customerId, data) =>
     request(`/customers/${customerId}/gardens`, { method: "POST", token, body: data }),

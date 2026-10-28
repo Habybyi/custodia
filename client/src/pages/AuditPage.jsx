@@ -8,7 +8,7 @@ import { AUDIT_ACTION_LABELS, AUDIT_ENTITY_LABELS, ROLE_LABELS } from "../utils/
 import { formatDateTime } from "../utils/format";
 import styles from "../styles/neumorphic.module.css";
 
-const WARNING_ACTIONS = ["LOGIN_FAILED", "PASSWORD_RESET", "CUSTOMER_DELETED", "CUSTOMER_ANONYMIZED", "USER_UPDATED"];
+const WARNING_ACTIONS = ["LOGIN_FAILED", "PASSWORD_RESET", "CUSTOMER_DELETED", "USER_UPDATED"];
 
 const GROUPS = [
   ["security", "Bezpečnosť (prihlásenia, heslá, účty)"],

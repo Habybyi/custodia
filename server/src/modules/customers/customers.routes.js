@@ -41,6 +41,3 @@ customersRouter.get("/:id/export", requireRole("OWNER"), async (req, res) => {
   res.json(data);
 });
 
-customersRouter.post("/:id/anonymize", requireRole("OWNER"), async (req, res) => {
-  res.json(await gdprService.anonymizeCustomer(req.user.id, req.params.id));
-});

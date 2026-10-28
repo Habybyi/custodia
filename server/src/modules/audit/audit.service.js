@@ -9,7 +9,7 @@ export const ACTION_GROUPS = {
   security: ["LOGIN", "LOGIN_FAILED", "PASSWORD_CHANGED", "PASSWORD_RESET", "PASSWORD_RESET_REQUESTED", "PASSWORD_RESET_BY_EMAIL", "USER_CREATED", "USER_UPDATED"],
   failed: ["LOGIN_FAILED"],
   logins: ["LOGIN"],
-  customers: ["CUSTOMER_CREATED", "CUSTOMER_UPDATED", "CUSTOMER_DELETED", "CUSTOMER_EXPORTED", "CUSTOMER_ANONYMIZED"],
+  customers: ["CUSTOMER_CREATED", "CUSTOMER_UPDATED", "CUSTOMER_DELETED", "CUSTOMER_EXPORTED"],
 };
 
 export async function logAudit({ userId, action, entityType, entityId, details }) {

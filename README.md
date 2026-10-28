@@ -87,7 +87,7 @@ Každý krok ukazuje riešenie jedného problému z príbehu firmy.
 - **Pripomienky:** na jeseň zazimovanie, na jar spustenie (automaticky v nastavený deň, nikto ich nedostane dvakrát ani po zásahu), deň pred termínom zákazníkovi a technikovi zoznam výjazdov. Zákazník sa dá z pripomienok odhlásiť.
 - **Bez skrolovania na počítači:** obrazovka sa vždy zmestí, zoznamy majú stránkovanie podľa výšky okna, detaily sú v záložkách. Na mobile sa skroluje normálne a dole je lišta.
 - **Mesačný kalendár na prehľade:** bodka = výjazd vo farbe priority, klik na deň otvorí ten týždeň.
-- **GDPR:** export všetkých údajov zákazníka (JSON) a anonymizácia na žiadosť. Servisná história ostane bez osobných údajov.
+- **GDPR:** export všetkých údajov zákazníka (JSON) a natrvalo zmazanie na žiadosť.
 - **Dnešné výjazdy** na prehľade (technik vidí svoje) s tlačidlami zavolať a navigovať.
 - **Potvrdenia e-mailom:** zákazník dostane číslo požiadavky správu s termínom, pri presune alebo zrušení termínu a keď je hotovo. Majiteľ dostane upozornenie na novú požiadavku zvonku.
 
