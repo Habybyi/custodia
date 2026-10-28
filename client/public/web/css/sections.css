@@ -966,3 +966,87 @@ footer {
   height: 1px;
   opacity: 0;
 }
+.cal {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  padding: 12px;
+  max-width: 420px;
+}
+.cal-h {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  text-transform: capitalize;
+}
+.cal-n {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.cal-n:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.cal-g {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  text-align: center;
+}
+.cal-w {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--mut);
+  padding: 4px 0;
+}
+.cal-d {
+  display: grid;
+  place-items: center;
+  min-height: 44px;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 700;
+  line-height: 1.1;
+}
+button.cal-d {
+  border: 1px solid var(--brand2);
+  background: var(--card);
+  color: var(--brand2);
+  cursor: pointer;
+}
+button.cal-d small {
+  font-size: 0.6rem;
+  font-weight: 600;
+  opacity: 0.8;
+}
+button.cal-d:hover {
+  background: var(--brand2);
+  color: var(--on);
+}
+button.cal-d.on {
+  background: var(--brand2);
+  border-color: var(--brand2);
+  color: var(--on);
+}
+.cal-d.off {
+  color: var(--mut);
+  opacity: 0.45;
+  font-weight: 400;
+}
+.cal-s {
+  margin: 10px 0 0;
+  font-size: 0.9rem;
+  color: var(--mut);
+}
+@media (max-width: 480px) {
+  button.cal-d small {
+    display: none;
+  }
+}

@@ -73,25 +73,73 @@ $("#lead").onsubmit = async (e) => {
 
 const SERVICE_TYPES = { porucha: "FAULT", spustenie: "SPRING_START", zazimovanie: "WINTERIZATION" };
 let daysLoaded = false;
+const cal = { free: new Map(), month: null, first: null, last: null };
+const WEEKDAYS = ["Po", "Ut", "St", "Št", "Pi", "So", "Ne"];
+const pad = (n) => String(n).padStart(2, "0");
+const keyOf = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
+const dayLabel = (key) =>
+  new Date(key + "T12:00:00").toLocaleDateString("sk-SK", { weekday: "long", day: "numeric", month: "long" });
+
+function renderCalendar() {
+  const box = $("#cal"),
+    picked = $("#sd").value;
+  const { y, m } = cal.month;
+  const title = new Date(y, m, 1).toLocaleDateString("sk-SK", { month: "long", year: "numeric" });
+  const offset = (new Date(y, m, 1).getDay() + 6) % 7;
+  const count = new Date(y, m + 1, 0).getDate();
+  const canPrev = keyOf(y, m, 1) > cal.first;
+  const canNext = keyOf(y, m, count) < cal.last;
+  let cells = "";
+  for (let i = 0; i < offset; i++) cells += "<span></span>";
+  for (let d = 1; d <= count; d++) {
+    const key = keyOf(y, m, d),
+      free = cal.free.get(key);
+    cells += free
+      ? `<button type="button" class="cal-d${key === picked ? " on" : ""}" data-day="${key}" aria-pressed="${key === picked}" aria-label="${esc(dayLabel(key))}, voľné miesta: ${free}">${d}<small>${free} voľ.</small></button>`
+      : `<span class="cal-d off" aria-hidden="true">${d}</span>`;
+  }
+  box.innerHTML = `
+    <div class="cal-h">
+      <button type="button" class="cal-n" data-step="-1" aria-label="Predchádzajúci mesiac" ${canPrev ? "" : "disabled"}>‹</button>
+      <b>${esc(title)}</b>
+      <button type="button" class="cal-n" data-step="1" aria-label="Ďalší mesiac" ${canNext ? "" : "disabled"}>›</button>
+    </div>
+    <div class="cal-g">${WEEKDAYS.map((w) => `<span class="cal-w">${w}</span>`).join("")}${cells}</div>
+    <p class="cal-s">${picked ? `Vybraný termín: <b>${esc(dayLabel(picked))}</b>` : "Kliknite na zelený deň. Sivé dni sú plné."}</p>`;
+}
+
+$("#cal").onclick = (e) => {
+  const day = e.target.closest("[data-day]"),
+    nav = e.target.closest("[data-step]");
+  if (day) {
+    $("#sd").value = day.dataset.day;
+    renderCalendar();
+  } else if (nav && !nav.disabled) {
+    const next = new Date(cal.month.y, cal.month.m + Number(nav.dataset.step), 1);
+    cal.month = { y: next.getFullYear(), m: next.getMonth() };
+    renderCalendar();
+  }
+};
 
 async function loadFreeDays() {
   if (daysLoaded) return;
-  const sel = $("#sd");
+  const box = $("#cal");
   try {
     const r = await fetch(CFG.crm + "/availability?days=60");
     const { days } = await r.json();
-    sel.innerHTML = days.length
-      ? '<option value="">Vyberte deň</option>' +
-        days
-          .map((d) => {
-            const label = new Date(d.date + "T12:00:00").toLocaleDateString("sk-SK", { weekday: "long", day: "numeric", month: "numeric" });
-            return `<option value="${esc(d.date)}">${esc(label)} (voľné miesta: ${d.free})</option>`;
-          })
-          .join("")
-      : '<option value="">Najbližšie dni sú plné, zavolajte nám</option>';
+    if (!days.length) {
+      box.innerHTML = '<p class="who">Najbližšie dni sú plné, zavolajte nám.</p>';
+      return;
+    }
+    days.forEach((d) => cal.free.set(d.date, d.free));
+    cal.first = days[0].date;
+    cal.last = days[days.length - 1].date;
+    const [y, m] = cal.first.split("-").map(Number);
+    cal.month = { y, m: m - 1 };
     daysLoaded = true;
+    renderCalendar();
   } catch (e) {
-    sel.innerHTML = '<option value="">Termíny sa nepodarilo načítať, zavolajte nám</option>';
+    box.innerHTML = '<p class="who">Termíny sa nepodarilo načítať, zavolajte nám.</p>';
   }
 }
 

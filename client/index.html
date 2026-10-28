@@ -622,11 +622,12 @@
               <div>
                 <label for="sm">Obec</label><input type="text" id="sm" autocomplete="address-level2" />
               </div>
-              <div id="dt" class="hide">
-                <label for="sd">Voľný termín</label
-                ><select id="sd">
-                  <option value="">Načítavam voľné dni…</option>
-                </select>
+            </div>
+            <div id="dt" class="hide">
+              <label id="sd-l">Voľný termín</label>
+              <input type="hidden" id="sd" />
+              <div class="cal" id="cal" role="group" aria-labelledby="sd-l">
+                <p class="who">Načítavam voľné dni…</p>
               </div>
             </div>
             <small class="who hide" id="dt-hint"
